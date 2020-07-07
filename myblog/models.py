@@ -20,6 +20,9 @@ class Post(models.Model):
     def __str__(self):
         return self.title
 
+    class Meta:
+        ordering = ['title']
+
 
 class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
@@ -29,3 +32,6 @@ class Comment(models.Model):
 
     def __str__(self):
         return f'Comment on {self.post} from {self.author}, published at {self.published_at}'
+
+    class Meta:
+        ordering = ['published_at']
