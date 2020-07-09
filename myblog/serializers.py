@@ -1,11 +1,11 @@
-from rest_framework import serializers
-from myblog.models import Tag, Post, Comment
 from django.contrib.auth.models import User
+
+from rest_framework import serializers
+
+from .models import Tag, Post, Comment
 
 
 class TagSerializer(serializers.HyperlinkedModelSerializer):
-    owner = serializers.ReadOnlyField(source='owner.username')
-    highlight = serializers.HyperlinkedIdentityField(view_name='tags-highlight', format='html')
 
     class Meta:
         model = Tag
@@ -13,17 +13,14 @@ class TagSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class CommentSerializer(serializers.HyperlinkedModelSerializer):
-    owner = serializers.ReadOnlyField(source='owner.username')
-    highlight = serializers.HyperlinkedIdentityField(view_name='comments-highlight', format='html')
 
     class Meta:
-        model = Tag
+        model = Comment
         fields = ['post', 'content', 'published_at', 'author']
 
 
 class PostSerializer(serializers.HyperlinkedModelSerializer):
-    owner = serializers.ReadOnlyField(source='owner.username')
-    highlight = serializers.HyperlinkedIdentityField(view_name='posts-highlight', format='html')
+    tags = serializers.HyperlinkedRelatedField(many=True, view_name='tags', queryset=Tag.objects.all())
 
     class Meta:
         model = Post
@@ -31,10 +28,9 @@ class PostSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
-    tags = serializers.HyperlinkedRelatedField(many=True, view_name='tags-detail', read_only=True)
-    comments = serializers.HyperlinkedRelatedField(many=True, view_name='comments-detail', read_only=True)
-    posts = serializers.HyperlinkedRelatedField(many=True, view_name='posts-detail', read_only=True)
+    comments = serializers.HyperlinkedRelatedField(many=True, view_name='comments', read_only=True)
+    posts = serializers.HyperlinkedRelatedField(many=True, view_name='posts', read_only=True)
 
     class Meta:
         model = User
-        fields = ['url', 'id', 'username', 'tags', 'comments', 'posts']
+        fields = ['url', 'id', 'username', 'comments', 'posts']
