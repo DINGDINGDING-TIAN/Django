@@ -12,6 +12,16 @@ class TagSerializer(serializers.HyperlinkedModelSerializer):
         fields = ['name']
 
 
+class PostSerializer(serializers.HyperlinkedModelSerializer):
+    tags = serializers.HyperlinkedRelatedField(many=True,
+                                               view_name='tag-detail',
+                                               queryset=Tag.objects.all())
+
+    class Meta:
+        model = Post
+        fields = ['title', 'summary', 'content', 'published_at', 'author', 'tags']
+
+
 class CommentSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
@@ -19,17 +29,13 @@ class CommentSerializer(serializers.HyperlinkedModelSerializer):
         fields = ['post', 'content', 'published_at', 'author']
 
 
-class PostSerializer(serializers.HyperlinkedModelSerializer):
-    tags = serializers.HyperlinkedRelatedField(many=True, view_name='tag-detail', queryset=Tag.objects.all())
-
-    class Meta:
-        model = Post
-        fields = ['title', 'summary', 'content', 'published_at', 'author', 'tags']
-
-
 class UserSerializer(serializers.HyperlinkedModelSerializer):
-    comments = serializers.HyperlinkedRelatedField(many=True, view_name='comment-detail', read_only=True)
-    posts = serializers.HyperlinkedRelatedField(many=True, view_name='post-detail', read_only=True)
+    comments = serializers.HyperlinkedRelatedField(many=True,
+                                                   view_name='comment-detail',
+                                                   read_only=True)
+    posts = serializers.HyperlinkedRelatedField(many=True,
+                                                view_name='post-detail',
+                                                read_only=True)
 
     class Meta:
         model = User
