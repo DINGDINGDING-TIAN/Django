@@ -1,5 +1,5 @@
-from django.db import models
 from django.contrib.auth.models import User
+from django.db import models
 
 
 class Tag(models.Model):
@@ -35,18 +35,3 @@ class Comment(models.Model):
 
     class Meta:
         ordering = ['published_at']
-
-
-author = models.ForeignKey('auth.User', related_name='myblog', on_delete=models.CASCADE)
-
-
-def save(self, *args, **kwargs):
-    super(Post, self).save(*args, **kwargs)
-
-
-def save(self, *args, **kwargs):
-    super(Tag, self).save(*args, **kwargs)
-
-
-def save(self, *args, **kwargs):
-    super(Comment, self).save(*args, **kwargs)

@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 
 from rest_framework import serializers
 
-from .models import Tag, Post, Comment
+from .models import Comment, Post, Tag
 
 
 class TagSerializer(serializers.HyperlinkedModelSerializer):
@@ -20,7 +20,7 @@ class CommentSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class PostSerializer(serializers.HyperlinkedModelSerializer):
-    tags = serializers.HyperlinkedRelatedField(many=True, view_name='tags', queryset=Tag.objects.all())
+    tags = serializers.HyperlinkedRelatedField(many=True, view_name='tag-detail', queryset=Tag.objects.all())
 
     class Meta:
         model = Post
@@ -28,8 +28,8 @@ class PostSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
-    comments = serializers.HyperlinkedRelatedField(many=True, view_name='comments', read_only=True)
-    posts = serializers.HyperlinkedRelatedField(many=True, view_name='posts', read_only=True)
+    comments = serializers.HyperlinkedRelatedField(many=True, view_name='comment-detail', read_only=True)
+    posts = serializers.HyperlinkedRelatedField(many=True, view_name='post-detail', read_only=True)
 
     class Meta:
         model = User
